@@ -1,0 +1,352 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COYU Brand Finder - Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1>COYU Brand Finder</h1>
+                <p class="subtitle">International Brands Management Platform</p>
+            </div>
+            <div class="header-right">
+                <span id="userGreeting" class="user-greeting">Welcome!</span>
+                <button class="btn-logout" id="logoutBtn">Logout</button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <!-- Left Sidebar - Filters -->
+            <aside class="filters-sidebar">
+                <h2>Search & Filter</h2>
+
+                <!-- Category Filter -->
+                <div class="filter-group">
+    <label>CATEGORY:</label>
+    <div id="categoryFilter" class="checkbox-dropdown">
+        <div class="checkbox-dropdown-toggle" onclick="toggleDropdown('categoryFilter')">
+            <span id="categoryFilterLabel">Select categories</span>
+            <span>▾</span>
+        </div>
+        <div class="checkbox-dropdown-list" id="categoryFilterList" style="display:none;"></div>
+    </div>
+</div>
+
+                <!-- Price Band Filter -->
+                <div class="filter-group">
+    <label>PRICE BAND:</label>
+    <div id="priceFilter" class="checkbox-dropdown">
+        <div class="checkbox-dropdown-toggle" onclick="toggleDropdown('priceFilter')">
+            <span id="priceFilterLabel">Select price range</span>
+            <span>▾</span>
+        </div>
+        <div class="checkbox-dropdown-list" id="priceFilterList" style="display:none;"></div>
+    </div>
+</div>
+
+<div class="filter-group">
+    <label>STYLE:</label>
+    <div id="styleFilter" class="checkbox-dropdown">
+        <div class="checkbox-dropdown-toggle" onclick="toggleDropdown('styleFilter')">
+            <span id="styleFilterLabel">Select style</span>
+            <span>▾</span>
+        </div>
+        <div class="checkbox-dropdown-list" id="styleFilterList" style="display:none;"></div>
+    </div>
+</div>
+
+<div class="filter-group">
+    <label>USP:</label>
+    <div id="uspFilter" class="checkbox-dropdown">
+        <div class="checkbox-dropdown-toggle" onclick="toggleDropdown('uspFilter')">
+            <span id="uspFilterLabel">Select USP</span>
+            <span>▾</span>
+        </div>
+        <div class="checkbox-dropdown-list" id="uspFilterList" style="display:none;"></div>
+    </div>
+</div>
+                <!-- Search Box -->
+                <div class="filter-group">
+                    <label for="searchBrand">SEARCH FOR BRAND:</label>
+                    <input 
+                        type="text" 
+                        id="searchBrand" 
+                        placeholder="Search by Brand or Country"
+                        class="filter-input"
+                    >
+                </div>
+
+                <!-- Show Matching Brands Button -->
+                <button id="showMatchingBtn" class="btn-primary btn-block">
+                    Show matching Brands
+                </button>
+
+                <!-- Filter Checkboxes Section -->
+                <!-- <div class="filter-section">
+                    <h3>Filter</h3>
+                    <div id="categoryCheckboxes" class="checkbox-group"></div>
+                </div> -->
+
+                <!-- Featuring Section -->
+                <!-- <div class="filter-section">
+                    <h3>Featuring</h3>
+                    <div id="styleCheckboxes" class="checkbox-group"></div>
+                </div> -->
+            </aside>
+
+            <!-- Right Content Area -->
+            <div class="content-area">
+                <!-- Top Bar with Sort & Add Button -->
+                <div class="content-header">
+                    <div class="sort-section">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy" class="filter-select">
+                            <option value="name">Brand Name</option>
+                            <option value="price">Price Stage</option>
+                            <option value="country">Country</option>
+                        </select>
+                    </div>
+                    <button class="btn-add-brand" id="addBrandBtn">
+                        ➕ Add New Brand
+                    </button>
+                </div>
+
+                <!-- Brands Table -->
+                <div class="table-wrapper">
+                    <table id="brandsTable" class="brands-table">
+                        <thead>
+                            <tr>
+                                <th>Brand Name</th>
+                                <th>Country</th>
+                                <th>Categories</th>
+                                <th>Price Range</th>
+                                <th>USP</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="brandsTableBody">
+                            <tr class="loading-row">
+                                <td colspan="6" style="text-align: center; padding: 20px;">
+                                    Loading brands... ⏳
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="btn-pagination" id="prevBtn" disabled>← Previous</button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button class="btn-pagination" id="nextBtn" disabled>Next →</button>
+                </div>
+
+                <!-- Showing Info -->
+                <div class="info-text">
+                    <span id="showingInfo">Showing 0 brands</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Brand Modal -->
+    <div id="addBrandModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Brand</h2>
+                <button class="modal-close" id="closeBrandModal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-row">
+                    <!-- Left: Form -->
+                    <div class="modal-form">
+                        <!-- Replace the entire modal-form div contents with this correctly ordered form -->
+                        <form id="addBrandForm">
+                            <div class="form-group">
+                                <label for="brandName">Brand Name:</label>
+                                <input type="text" id="brandName" placeholder="Enter brand name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="brandCountry">Country:</label>
+                                <input type="text" id="brandCountry" placeholder="Enter country" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Categories:</label>
+                                <div id="brandCategoryDropdown" class="checkbox-dropdown">
+                                    <div class="checkbox-dropdown-toggle" onclick="toggleDropdown('brandCategoryDropdown')">
+                                        <span id="brandCategoryLabel">Select categories</span>
+                                        <span>▾</span>
+                                    </div>
+                                    <div class="checkbox-dropdown-list" id="brandCategoryList" style="display:none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>USP:</label>
+                                <div id="brandUSPDropdown" class="checkbox-dropdown">
+                                    <div class="checkbox-dropdown-toggle" onclick="toggleDropdown('brandUSPDropdown')">
+                                        <span id="brandUSPLabel">Select USP</span>
+                                        <span>▾</span>
+                                    </div>
+                                    <div class="checkbox-dropdown-list" id="brandUSPList" style="display:none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="brandWebsite">Website:</label>
+                                <input type="url" id="brandWebsite" placeholder="https://www.example.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="brandInstagram">Instagram:</label>
+                                <input type="url" id="brandInstagram" placeholder="https://www.instagram.com/brandname">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Price Range: Rs.</label>
+                                <div class="price-range-input">
+                                    <select id="brandPriceMin" required>
+                                        <option value="">Min</option>
+                                    </select>
+                                    <span class="dash">-</span>
+                                    <select id="brandPriceMax" required>
+                                        <option value="">Max</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="formError" class="error-message" style="display: none;"></div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn-primary">SAVE</button>
+                                <button type="button" class="btn-secondary" id="cancelBrandBtn">CANCEL</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right: Brand Details Preview -->
+                    <!-- Replace the entire modal-preview div with this -->
+                    <div class="modal-preview">
+                        <h3>Brand Details</h3>
+                        <div class="preview-content">
+                            <div class="preview-item">
+                                <strong>Brand Name</strong>
+                                <p id="previewBrandName">N/A</p>
+                            </div>
+                            <div class="preview-item">
+                                <strong>Country:</strong>
+                                <p id="previewCountry">N/A</p>
+                            </div>
+                            <div class="preview-item">
+                                <strong>Website:</strong>
+                                <p id="previewWebsite">N/A</p>
+                            </div>
+                            <div class="preview-item">
+                                <strong>Instagram:</strong>
+                                <p id="previewInstagram">N/A</p>
+                            </div>
+                            <div class="preview-item">
+                                <strong>Categories:</strong>
+                                <p id="previewCategories">N/A</p>
+                            </div>
+                            <div class="preview-item">
+                                <strong>Price Range:</strong>
+                                <p id="previewPrice">Rs. N/A - N/A</p>
+                            </div>
+                            <div class="preview-item">
+                                <strong>USP:</strong>
+                                <p id="previewUSP">N/A</p>
+                            </div>
+                        </div>
+
+                        <!-- ✅ Workflow pushed to bottom -->
+                        <div class="workflow-preview">
+                            <h4>Workflow Status:</h4>
+                            <div class="workflow-step-preview">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <strong>Brand Evaluation</strong>
+                                </div>
+                                <div class="step-badge current">Current</div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brand Details Modal (for viewing workflow & managing brand) -->
+    <div id="brandDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="detailsBrandName">Brand Details</h2>
+                <button class="modal-close" id="closeBrandDetailsModal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Brand Info Section -->
+                <div class="details-section">
+                    <h3>Brand Information</h3>
+                    <div class="brand-info-grid">
+                        <div class="info-item">
+                            <label>Brand Name:</label>
+                            <span id="detailBrandName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Country:</label>
+                            <span id="detailCountry">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Website:</label>
+                            <span id="detailWebsite">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Instagram:</label>
+                            <span id="detailInstagram">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Categories:</label>
+                            <span id="detailCategories">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Price Range:</label>
+                            <span id="detailPrice">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>USP:</label>
+                            <span id="detailUSP">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workflow Section -->
+                <div class="details-section">
+                    <h3>Workflow Status</h3>
+                    <div id="workflowContainer" class="workflow-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/api.js' %}"></script>
+    <script src="{% static 'js/auth.js' %}"></script>
+    <script src="{% static 'js/brands.js' %}"></script>
+    <script src="{% static 'js/workflow.js' %}"></script>
+    <script src="{% static 'js/filters.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        // Initialize on load
+    </script>
+</body>
+</html>
