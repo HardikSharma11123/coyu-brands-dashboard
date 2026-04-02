@@ -507,25 +507,6 @@ html, body {
     white-space: nowrap;
 }
 
-.status-badge.status-brand-evaluation {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.status-badge.status-negotiation {
-    background-color: #cce5ff;
-    color: #004085;
-}
-
-.status-badge.status-approved {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.status-badge.status-live {
-    background-color: #d1f5e0;
-    color: #0a5c2e;
-}
 
 /* ============================================
    PAGINATION
@@ -1053,12 +1034,12 @@ html, body {
     color: #004085;
 }
 
-.status-badge.status-cataloguing-and-sku-creation {
+.status-badge.status-cataloguing {
     background-color: #fde8d8;
     color: #7d3a0f;
 }
 
-.status-badge.status-logistics-and-shipment {
+.status-badge.status-logistics {
     background-color: #d6eaf8;
     color: #1a5276;
 }

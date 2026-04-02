@@ -3,7 +3,7 @@ const workflow = {
         try {
             const response = await api.brands.setCurrentStep(brandId, stepNumber);
             if (response.success) {
-                // Update UI instantly without reloading modal
+                // Update workflow UI instantly
                 document.querySelectorAll('.workflow-step').forEach(el => {
                     el.classList.remove('current');
                 });
@@ -21,10 +21,13 @@ const workflow = {
                     btn.textContent = 'Current';
                     btn.disabled = true;
                 }
+
+                await brands.loadAllBrands(); // ✅ properly awaited
+                brands.showNotification('Workflow step updated!'); // ✅ non-blocking
             }
         } catch (error) {
             console.error('Error setting workflow step:', error);
-            alert('Failed to update workflow step');
+            brands.showNotification('Failed to update workflow step', 'error');
         }
     }
 };
